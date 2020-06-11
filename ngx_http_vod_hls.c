@@ -882,7 +882,7 @@ static const ngx_http_vod_request_t hls_master_request = {
 };
 
 static const ngx_http_vod_request_t hls_index_request = {
-	REQUEST_FLAG_SINGLE_TRACK_PER_MEDIA_TYPE | REQUEST_FLAG_TIME_DEPENDENT_ON_LIVE,
+	REQUEST_FLAG_TIME_DEPENDENT_ON_LIVE,
 	PARSE_BASIC_METADATA_ONLY,
 	REQUEST_CLASS_MANIFEST,
 	SUPPORTED_CODECS | VOD_CODEC_FLAG(WEBVTT),
@@ -892,7 +892,7 @@ static const ngx_http_vod_request_t hls_index_request = {
 };
 
 static const ngx_http_vod_request_t hls_iframes_request = {
-	REQUEST_FLAG_SINGLE_TRACK_PER_MEDIA_TYPE | REQUEST_FLAG_PARSE_ALL_CLIPS,
+	REQUEST_FLAG_PARSE_ALL_CLIPS,
 	PARSE_FLAG_FRAMES_ALL_EXCEPT_OFFSETS | PARSE_FLAG_PARSED_EXTRA_DATA_SIZE,
 	REQUEST_CLASS_OTHER,
 	SUPPORTED_CODECS,
@@ -902,7 +902,7 @@ static const ngx_http_vod_request_t hls_iframes_request = {
 };
 
 static const ngx_http_vod_request_t hls_enc_key_request = {
-	REQUEST_FLAG_SINGLE_TRACK_PER_MEDIA_TYPE,
+	0,
 	PARSE_BASIC_METADATA_ONLY,
 	REQUEST_CLASS_OTHER,
 	SUPPORTED_CODECS,
@@ -912,7 +912,7 @@ static const ngx_http_vod_request_t hls_enc_key_request = {
 };
 
 static const ngx_http_vod_request_t hls_ts_segment_request = {
-	REQUEST_FLAG_SINGLE_TRACK_PER_MEDIA_TYPE,
+	0,
 	PARSE_FLAG_FRAMES_ALL | PARSE_FLAG_PARSED_EXTRA_DATA,
 	REQUEST_CLASS_SEGMENT,
 	SUPPORTED_CODECS,
@@ -922,7 +922,7 @@ static const ngx_http_vod_request_t hls_ts_segment_request = {
 };
 
 static const ngx_http_vod_request_t hls_mp4_segment_request = {
-	REQUEST_FLAG_SINGLE_TRACK_PER_MEDIA_TYPE,
+	0,
 	PARSE_FLAG_FRAMES_ALL | PARSE_FLAG_INITIAL_PTS_DELAY,
 	REQUEST_CLASS_SEGMENT,
 	SUPPORTED_CODECS,
@@ -932,7 +932,7 @@ static const ngx_http_vod_request_t hls_mp4_segment_request = {
 };
 
 static const ngx_http_vod_request_t hls_mp4_segment_request_cbcs = {
-	REQUEST_FLAG_SINGLE_TRACK_PER_MEDIA_TYPE,
+	0,
 	PARSE_FLAG_FRAMES_ALL | PARSE_FLAG_EXTRA_DATA | PARSE_FLAG_INITIAL_PTS_DELAY,
 	REQUEST_CLASS_SEGMENT,
 	SUPPORTED_CODECS,
@@ -942,7 +942,7 @@ static const ngx_http_vod_request_t hls_mp4_segment_request_cbcs = {
 };
 
 static const ngx_http_vod_request_t hls_mp4_segment_request_cenc = {
-	REQUEST_FLAG_SINGLE_TRACK_PER_MEDIA_TYPE,
+	0,
 	PARSE_FLAG_FRAMES_ALL | PARSE_FLAG_PARSED_EXTRA_DATA | PARSE_FLAG_INITIAL_PTS_DELAY,
 	REQUEST_CLASS_SEGMENT,
 	SUPPORTED_CODECS,
@@ -962,7 +962,7 @@ static const ngx_http_vod_request_t hls_vtt_segment_request = {
 };
 
 static const ngx_http_vod_request_t hls_mp4_init_request = {
-	REQUEST_FLAG_SINGLE_TRACK_PER_MEDIA_TYPE,
+	0,
 	PARSE_BASIC_METADATA_ONLY | PARSE_FLAG_SAVE_RAW_ATOMS,
 	REQUEST_CLASS_OTHER,
 	SUPPORTED_CODECS,
@@ -1122,7 +1122,7 @@ ngx_http_vod_hls_parse_uri_file_name(
 		{
 			*request = &hls_index_request;
 			start_pos += conf->hls.m3u8_config.index_file_name_prefix.len;
-			flags = 0;
+			flags = PARSE_FILE_NAME_MULTI_STREAMS_PER_TYPE;
 		}
 		else if (ngx_http_vod_starts_with(start_pos, end_pos, &conf->hls.m3u8_config.iframes_file_name_prefix))
 		{
